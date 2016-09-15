@@ -15,28 +15,14 @@ gulp.task('partials', function () {
     .pipe(injectPartials({
       removeTags: true
     }))
-    .pipe(gulp.dest('./app'));
+    .pipe(gulp.dest('./'));
 });
 
-gulp.task('js', function() {
-  return gulp.src('./src/js/main.js')
-    .pipe(gulp.dest('./app/js'));
-});
-
-gulp.task('build', ['sass', 'partials', 'js']);
+gulp.task('build', ['sass', 'partials']);
 
 gulp.task('serve', ['build'], function() {
-
-  browserSync.init({
-    server : './app',
-    open: true
-  });
-
   gulp.watch('src/sass/*.scss', ['sass']).on('change', browserSync.reload);
   gulp.watch('src/sass/*/*.scss', ['sass']).on('change', browserSync.reload);
-  gulp.watch('src/js/*', ['js']).on('change', browserSync.reload);
   gulp.watch('src/html/index.html', ['partials']).on('change', browserSync.reload);
   gulp.watch('src/html/*/*.html', ['partials']).on('change', browserSync.reload);
-  gulp.watch('src/speakers/*').on('change', browserSync.reload);
-  gulp.watch('src/images/*').on('change', browserSync.reload);
 });
