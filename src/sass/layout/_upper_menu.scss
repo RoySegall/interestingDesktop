@@ -1,0 +1,55 @@
+.ui.vertical.navbar.menu {
+  display: none;
+}
+
+.ui.fixed.menu, .ui[class*="top fixed"].menu {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+.computer {
+
+  .ui.inverted.menu .item:before,
+  .ui.vertical.inverted.menu .item:before {
+    background: transparent;
+  }
+
+  .logo {
+    height: 40px;
+    margin-top: 10px;
+    margin-bottom: 10px
+  }
+
+  .title {
+    margin: 0;
+    padding: 0;
+    font-size: 30px;
+  }
+
+  .ui.menu .item {
+    padding: 10px 0 0;
+  }
+
+  .right.menu {
+    background: none;
+
+    li {
+      list-style: none;
+      color: #ffffff;
+      padding-top: 20px;
+      font-size: 20px;
+      padding-right: 10px;
+
+      a {
+        color: white;
+        border-left: white solid 1px;
+        padding-left: 10px;
+
+        &.first {
+          border: none;
+        }
+      }
+    }
+
+  }
+}
