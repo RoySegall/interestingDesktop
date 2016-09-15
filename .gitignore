@@ -3,3 +3,4 @@ node_modules
 /app
 /npm-debug.log
 /.idea
+/db.json

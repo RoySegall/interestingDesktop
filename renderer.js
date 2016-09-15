@@ -1,29 +1,41 @@
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
-
 $ = require('jquery');
 
-$(function(){
+$(function() {
 
-  var r = require('rethinkdb');
+  $.get('https://maps.googleapis.com/maps/api/browserlocation/json?browser=chromium&sensor=true', function(data) {
 
-  var connection = null;
-  r.connect( {host: 'localhost', port: 28015}, function(err, conn) {
-    
-    if (err) {
-      throw err;
-    }
+    var
+      r = require('rethinkdb'),
+      info = require('./db.json'),
+      location = data.location;
 
-    connection = conn;
+    var current_point = r.point(parseFloat(location.lng), parseFloat(location.lat));
 
-    r.db('test').table('names').changes().run(conn, function(err, cursor) {
-      cursor.each(function(connection, value) {
+    var connection = null;
+    r.connect({host: info.host, port: info.port}, function(err, conn) {
 
-        $('body').append(value['new_val'].message + "<br />");
+      if (err) {
+        throw err;
+      }
+
+      connection = conn;
+
+      var db = r.db(info.database);
+
+      db.table('interest_room').run(conn, function(err, cursor) {
+        cursor.each(function(connection, value) {
+
+
+          console.log(value);
+
+          var room_point = r.point(parseFloat(value.location.lon), parseFloat(value.location.lat));
+          r.distance(room_point, current_point, {unit: 'km'}).run(conn, function(data) {
+            console.log(data);
+          });
+
+        });
       });
-    })
+    });
   });
-
 });
 
