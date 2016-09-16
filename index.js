@@ -1,51 +1,68 @@
 const $ = require('jquery');
-const queryString = require('query-string');
-const queryArguments = queryString.parse(location.search);
-const path = location.pathname.split("/");
-const file = path[path.length - 1];
+
+window.$ = window.jQuery = $;
 
 $(function() {
 
-  $.get('https://maps.googleapis.com/maps/api/browserlocation/json?browser=chromium&sensor=true', function(data) {
+  if (localStorage.getItem('UserInfo') == null) {
+    $('.rooms').hide();
+    $('.dimmer').hide();
 
-    var
-      r = require('rethinkdb'),
-      info = require('./db.json'),
-      location = data.location;
 
-    var current_point = r.point(parseFloat(location.lng), parseFloat(location.lat));
+    $('.submit.button').click(function() {
+      $('form').addClass('loading');
+      $.get('https://api.github.com/users/' + $(".email").val()).done(function(data) {
+          localStorage.setItem('UserInfo', data);
+          $('form').removeClass('loading');
+          location.reload();
+        })
+        .fail(function() {
+          alert("Can't find this username");
+        });
+    });
+  }
+  else {
+    $('.login').hide();
+    
+    $.get('https://maps.googleapis.com/maps/api/browserlocation/json?browser=chromium&sensor=true', function(data) {
 
-    var connection = null;
-    r.connect({host: info.host, port: info.port}, function(err, conn) {
+      var
+        r = require('rethinkdb'),
+        info = require('./db.json'),
+        location = data.location;
 
-      if (err) {
-        throw err;
-      }
+      var current_point = r.point(parseFloat(location.lng), parseFloat(location.lat));
 
-      connection = conn;
+      var connection = null;
+      r.connect({host: info.host, port: info.port}, function(err, conn) {
 
-      var db = r.db(info.database);
+        if (err) {
+          throw err;
+        }
 
-      var rooms = $('.rooms tbody').hide();
+        connection = conn;
 
-      db.table('interest_room').run(conn, function(err, cursor) {
+        var db = r.db(info.database);
 
-        cursor.each(function(connection, value) {
+        var rooms = $('.rooms tbody').hide();
 
-          var room_point = r.point(parseFloat(value.location.lon), parseFloat(value.location.lat));
+        db.table('interest_room').run(conn, function(err, cursor) {
 
-          // todo: fix distance calculation.
-          r.distance(room_point, current_point, {unit: 'km'}).run(conn, function(error, data) {
-            rooms.append("<tr><td><a href='room.html?id=" + value['id'] + "'>" + value['name'] + "</a></td><td>" + data + " KM</td></tr>");
+          cursor.each(function(connection, value) {
+
+            var room_point = r.point(parseFloat(value.location.lon), parseFloat(value.location.lat));
+
+            r.distance(room_point, current_point, {unit: 'km'}).run(conn, function(error, data) {
+              rooms.append("<tr><td><a href='room.html?id=" + value['id'] + "'>" + value['name'] + "</a></td><td>" + data + " KM</td></tr>");
+            });
+
+          }, function(value) {
+            rooms.show();
+            $('.dimmer').hide();
           });
-
-        }, function(value) {
-          rooms.show();
-          $('.dimmer').hide();
         });
       });
     });
-  });
+  }
 
 });
-
