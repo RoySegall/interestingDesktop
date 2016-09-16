@@ -3,16 +3,16 @@ const $ = require('jquery');
 window.$ = window.jQuery = $;
 
 $(function() {
-
-  if (localStorage.getItem('UserInfo') == null) {
+  if (localStorage.getItem('userInfo') == undefined) {
     $('.rooms').hide();
     $('.dimmer').hide();
+    $('.welcome_header h1').hide();
 
 
     $('.submit.button').click(function() {
       $('form').addClass('loading');
-      $.get('https://api.github.com/users/' + $(".email").val()).done(function(data) {
-          localStorage.setItem('UserInfo', data);
+      $.get('https://api.github.com/users/' + $("#email").val()).done(function(data) {
+          localStorage.setItem('userInfo', JSON.stringify(data));
           $('form').removeClass('loading');
           location.reload();
         })
@@ -23,7 +23,8 @@ $(function() {
   }
   else {
     $('.login').hide();
-    
+    $('.welcome_header h1').append(localStorage.getItem('name'));
+
     $.get('https://maps.googleapis.com/maps/api/browserlocation/json?browser=chromium&sensor=true', function(data) {
 
       var
