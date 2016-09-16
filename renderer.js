@@ -22,7 +22,7 @@ $(function() {
 
       var db = r.db(info.database);
 
-      var rooms = $('.rooms tbody');
+      var rooms = $('.rooms tbody').hide();
 
       db.table('interest_room').run(conn, function(err, cursor) {
 
@@ -34,6 +34,10 @@ $(function() {
           r.distance(room_point, current_point, {unit: 'km'}).run(conn, function(error, data) {
             rooms.append("<tr><td>" + value['name'] + "</td><td>" + data + " KM</td></tr>");
           });
+
+        }, function(value) {
+          rooms.show();
+          $('.dimmer').hide();
         });
       });
     });
