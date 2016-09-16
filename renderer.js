@@ -22,17 +22,18 @@ $(function() {
 
       var db = r.db(info.database);
 
+      var rooms = $('.rooms tbody');
+
       db.table('interest_room').run(conn, function(err, cursor) {
+
         cursor.each(function(connection, value) {
 
-
-          console.log(value);
-
           var room_point = r.point(parseFloat(value.location.lon), parseFloat(value.location.lat));
-          r.distance(room_point, current_point, {unit: 'km'}).run(conn, function(data) {
-            console.log(data);
-          });
 
+          // todo: fix distance calculation.
+          r.distance(room_point, current_point, {unit: 'km'}).run(conn, function(error, data) {
+            rooms.append("<tr><td>" + value['name'] + "</td><td>" + data + " KM</td></tr>");
+          });
         });
       });
     });
