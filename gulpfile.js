@@ -11,7 +11,7 @@ gulp.task('sass', function () {
 });
 
 gulp.task('partials', function () {
-  return gulp.src('./src/html/index.html')
+  return gulp.src('./src/html/*.html')
     .pipe(injectPartials({
       removeTags: true
     }))
@@ -24,5 +24,6 @@ gulp.task('serve', ['build'], function() {
   gulp.watch('src/sass/*.scss', ['sass']).on('change', browserSync.reload);
   gulp.watch('src/sass/*/*.scss', ['sass']).on('change', browserSync.reload);
   gulp.watch('src/html/index.html', ['partials']).on('change', browserSync.reload);
+  gulp.watch('src/html/room.html', ['partials']).on('change', browserSync.reload);
   gulp.watch('src/html/*/*.html', ['partials']).on('change', browserSync.reload);
 });

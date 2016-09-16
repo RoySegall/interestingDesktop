@@ -1,4 +1,8 @@
-$ = require('jquery');
+const $ = require('jquery');
+const queryString = require('query-string');
+const queryArguments = queryString.parse(location.search);
+const path = location.pathname.split("/");
+const file = path[path.length - 1];
 
 $(function() {
 
@@ -32,7 +36,7 @@ $(function() {
 
           // todo: fix distance calculation.
           r.distance(room_point, current_point, {unit: 'km'}).run(conn, function(error, data) {
-            rooms.append("<tr><td>" + value['name'] + "</td><td>" + data + " KM</td></tr>");
+            rooms.append("<tr><td><a href='room.html?id=" + value['id'] + "'>" + value['name'] + "</a></td><td>" + data + " KM</td></tr>");
           });
 
         }, function(value) {
@@ -42,5 +46,6 @@ $(function() {
       });
     });
   });
+
 });
 
