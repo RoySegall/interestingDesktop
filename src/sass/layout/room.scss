@@ -20,6 +20,41 @@
 
     p {
       padding-left: 10px;
+      border-bottom: solid 1px #00B8FF;
+      padding-bottom: 10px;
+    }
+  }
+
+  .footer {
+
+    .ui.form {
+      display: inline-flex;
+      width: 100%;
+    }
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 52;
+
+    input,
+    .ui.submit {
+      border: solid 1px #00adff !important;
+      border-radius: 0 !important;
+      border-bottom: none !important;
+    }
+
+    .ui.submit {
+      background: #00adff;
+      color: white;
+      border-left: none;
+      margin: 0;
+    }
+
+    input {
+      border-right: none !important;
+      border-left: none !important;
     }
   }
 

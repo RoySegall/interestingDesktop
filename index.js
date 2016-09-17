@@ -22,8 +22,9 @@ $(function() {
     });
   }
   else {
-    $('.login').hide();
-    $('.welcome_header h1').append(localStorage.getItem('name'));
+    var storage = JSON.parse(localStorage.getItem('userInfo'));
+    $('.welcome_header h1').append(storage.login);
+    $('.login.ui').hide();
 
     $.get('https://maps.googleapis.com/maps/api/browserlocation/json?browser=chromium&sensor=true', function(data) {
 
